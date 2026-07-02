@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Permainan Anak Dunia — Zaman Milenial</title>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700;900&family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:        #EEF2F8;
+  --bg-deep:   #E4EAF3;
+  --ink:       #17273F;
+  --ink-soft:  #4B5C74;
+  --muted:     #8496AF;
+  --card:      #FFFFFF;
+  --card-border: #E5EAF2;
+  --line:      #E9EDF4;
+  --accent:    #2E7BD6;
+  --accent-deep: #1B5FB0;
+  --amber:     #F4A02A;
+  --amber-deep:#E0850F;
+  --shadow:    0 2px 10px rgba(23,39,63,0.06);
+  --shadow-lg: 0 10px 30px rgba(23,39,63,0.10);
+  --radius:    16px;
+  --font-head: 'Exo 2', sans-serif;
+  --font-body: 'Nunito', sans-serif;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content:'';
+  position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 70% 45% at 15% 0%, rgba(46,123,214,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 40% at 90% 15%, rgba(244,160,42,0.07) 0%, transparent 55%);
+  pointer-events:none;z-index:0;
+}
+
+.page { position:relative;z-index:1;max-width:760px;margin:0 auto;padding:1.75rem 1.1rem 4rem; }
+
+.header {
+  text-align:center;
+  padding: 1.25rem 0 1.75rem;
+}
+.header h1 {
+  font-family: var(--font-head);
+  font-size: clamp(1.5rem, 5vw, 2.4rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  line-height: 1.15;
+}
+.header p {
+  color: var(--muted);
+  font-size: .88rem;
+  margin-top: .45rem;
+  letter-spacing: .02em;
+}
+
+.controls {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 22px;
+  padding: 1.1rem 1.1rem 1.25rem;
+  box-shadow: var(--shadow);
+  margin-bottom: 1.5rem;
+}
+
+.search-wrap { position: relative; margin-bottom: .7rem; }
+.search-wrap svg {
+  position:absolute;left:18px;top:50%;transform:translateY(-50%);
+  width:18px;height:18px;color:var(--muted);
+  pointer-events:none;
+}
+#searchInput {
+  width:100%;
+  background: var(--bg);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: .8rem 1rem .8rem 3rem;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: .95rem;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+#searchInput::placeholder { color: var(--muted); }
+#searchInput:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(46,123,214,0.12);
+}
+
+.dropdown { position: relative; margin-bottom: .9rem; }
+.dropdown-btn {
+  width:100%;
+  display:flex; align-items:center; gap:.6rem;
+  background: var(--bg);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: .8rem 1rem;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: .95rem;
+  cursor: pointer;
+  transition: border-color .2s;
+}
+.dropdown-btn:hover { border-color: var(--accent); }
+.dropdown-btn .dd-icon { font-size: 1.05rem; }
+.dropdown-btn .dd-label { flex:1; text-align:left; }
+.dropdown-btn .dd-chevron { width:16px;height:16px;color:var(--muted); transition: transform .2s; }
+.dropdown.open .dd-chevron { transform: rotate(180deg); }
+
+.dropdown-list {
+  position:absolute; left:0; right:0; top:calc(100% + 6px);
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  box-shadow: var(--shadow-lg);
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 40;
+  display: none;
+  padding: 6px;
+}
+.dropdown.open .dropdown-list { display:block; }
+.dropdown-item {
+  display:flex; align-items:center; gap:.55rem;
+  padding: .6rem .75rem;
+  border-radius: 10px;
+  font-size: .88rem;
+  font-weight: 600;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+.dropdown-item:hover { background: var(--bg); }
+.dropdown-item.active { background: rgba(46,123,214,0.1); color: var(--accent-deep); }
+.dropdown-item .swatch { width:8px;height:8px;border-radius:50%; flex-shrink:0; }
+
+.random-btn {
+  width:100%;
+  background: linear-gradient(135deg, #FBB13C, var(--amber-deep));
+  border: none;
+  padding: 14px 20px;
+  border-radius: 14px;
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 1rem;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(224,133,15,0.35);
+  transition: transform .15s, box-shadow .15s;
+  letter-spacing: .02em;
+}
+.random-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 24px rgba(224,133,15,0.45); }
+.random-btn:active { transform: scale(0.98); }
+.random-btn .dice { margin-right: 6px; }
+
+.result-count {
+  text-align:center;
+  color: var(--ink-soft);
+  font-size: .92rem;
+  margin: .3rem 0 1.25rem;
+}
+.result-count b { color: var(--accent); font-family: var(--font-head); }
+
+.cards { display: flex; flex-direction: column; gap: .85rem; }
+
+.card {
+  position: relative;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-left: 5px solid var(--cat-color, var(--accent));
+  border-radius: var(--radius);
+  padding: 1rem 1.15rem;
+  box-shadow: var(--shadow);
+  animation: fadeSlide .35s ease both;
+  transition: box-shadow .2s, transform .2s;
+}
+.card:hover { box-shadow: var(--shadow-lg); }
+
+.card.highlight {
+  background: linear-gradient(135deg, rgba(244,160,42,0.10), rgba(244,160,42,0.04));
+  border-color: var(--amber);
+  border-left-color: var(--amber-deep);
+  box-shadow: 0 0 0 3px rgba(244,160,42,0.18), var(--shadow-lg);
+  animation: popCard .5s ease;
+}
+@keyframes popCard {
+  0% { transform: scale(0.97); }
+  55% { transform: scale(1.015); }
+  100% { transform: scale(1); }
+}
+@keyframes fadeSlide {
+  from { opacity:0; transform:translateY(8px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+.card-top {
+  display:flex; align-items:flex-start; gap:.6rem;
+  margin-bottom: .35rem;
+}
+.card-num {
+  font-family: var(--font-head);
+  font-weight: 600;
+  color: var(--muted);
+  font-size: .85rem;
+  padding-top: .2rem;
+  flex-shrink:0;
+  min-width: 1.6em;
+}
+.card-name {
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-size: 1.12rem;
+  color: var(--accent-deep);
+  flex: 1;
+  line-height:1.3;
+}
+.card.highlight .card-name { color: var(--amber-deep); }
+
+.card-badge {
+  flex-shrink:0;
+  font-size: .68rem;
+  font-family: var(--font-head);
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 50px;
+  background: var(--badge-bg, rgba(46,123,214,0.1));
+  color: var(--badge-color, var(--accent-deep));
+  white-space: nowrap;
+}
+.card.highlight .card-badge {
+  background: var(--amber-deep) !important;
+  color: #fff !important;
+}
+
+.card-desc {
+  color: var(--ink-soft);
+  font-size: .92rem;
+  line-height: 1.5;
+  padding-left: calc(1.6em + .6rem);
+}
+
+.empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--muted);
+  font-size: .95rem;
+}
+.empty span { font-size: 2rem; display: block; margin-bottom: .5rem; }
+
+.footer {
+  text-align: center;
+  margin-top: 3rem;
+  color: var(--muted);
+  font-size: .78rem;
+  letter-spacing: .04em;
+}
+
+#scrollTopBtn {
+  position: fixed;
+  bottom: 26px;
+  right: 22px;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid var(--card-border);
+  background: var(--card);
+  color: var(--accent-deep);
+  font-size: 1.3rem;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.2s ease, box-shadow .2s;
+  box-shadow: var(--shadow-lg);
+  z-index: 999;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+#scrollTopBtn.visible { opacity: 1; pointer-events: auto; }
+#scrollTopBtn.visible:hover { transform: scale(1.08); }
+#scrollTopBtn:active { transform: scale(0.92); }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: rgba(46,123,214,0.3); border-radius: 3px; }
+
+@media(max-width:600px){
+  .header h1 { font-size: 1.4rem; }
+  .card-name { font-size: 1.02rem; }
+  #scrollTopBtn { bottom: 18px; right: 16px; width: 40px; height: 40px; font-size: 1.1rem; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="header">
+    <h1>Permainan Anak Dunia</h1>
+    <p>Zaman Milenial · 1980an–2000an · Dari 8 Kawasan + Digital</p>
+  </header>
+
+  <div class="controls">
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input type="text" id="searchInput" placeholder="Cari nama permainan..." oninput="applyFilters()"/>
+    </div>
+
+    <div class="dropdown" id="catDropdown">
+      <button type="button" class="dropdown-btn" id="dropdownBtn">
+        <span class="dd-icon" id="ddIcon">📋</span>
+        <span class="dd-label" id="ddLabel">Semua Kategori</span>
+        <svg class="dd-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      </button>
+      <div class="dropdown-list" id="dropdownList"></div>
+    </div>
+
+    <button class="random-btn" id="randomBtn"><span class="dice">🎲</span>Pilihkan Acak!</button>
+  </div>
+
+  <div class="result-count" id="resultCount"></div>
+
+  <div class="cards" id="cardsWrap"></div>
+
+  <div class="empty" id="emptyState" style="display:none">
+    <span>🔍</span>Tidak ada permainan yang ditemukan.<br>Coba kata kunci lain.
+  </div>
+
+  <div class="footer">✦ Nostalgia dari seluruh penjuru dunia ✦</div>
+</div>
+
+<button id="scrollTopBtn" aria-label="Scroll ke atas">⬆</button>
+
+<script>
+// ============================================================
+//  KATEGORI
+// ============================================================
+//  KATEGORI
+// ============================================================
+const CATEGORIES = [
+  { id:'id',  icon:'🇮🇩', label:'Indonesia',        color:'#4A9FD5' },
+  { id:'as',  icon:'🌏', label:'Asia Timur',          color:'#3BB8C3' },
+  { id:'sea', icon:'🌏', label:'Asia Tenggara',       color:'#2EA89A' },
+  { id:'sa',  icon:'🌏', label:'Asia Selatan',        color:'#2D9E7F' },
+  { id:'eu',  icon:'🌍', label:'Eropa',               color:'#3A7FC1' },
+  { id:'am',  icon:'🌎', label:'Amerika',             color:'#5270BA' },
+  { id:'af',  icon:'🌍', label:'Afrika',              color:'#3E98B8' },
+  { id:'mid', icon:'🌍', label:'Timur Tengah',        color:'#4D89C4' },
+  { id:'dig', icon:'🕹️', label:'Digital Milenial',   color:'#2B6CB0' },
+  { id:'uni', icon:'🌐', label:'Universal',           color:'#3182CE' },
+];
+
+// ============================================================
+//  DATA PERMAINAN
+// ============================================================
+function item(name, desc) {
+  return { name, desc: desc || `Permainan ${name} yang seru dimainkan bersama.` };
+}
+
+let DATA = [];
+
+// ── Indonesia ──
+DATA.push({
+  cat:'id', sub:'Permainan Outdoor Tradisional',
+  items: [
+    item('Petak Umpet Sembunyi', 'Satu orang mencari, sisanya bersembunyi. Siapa ditemukan lebih dulu jadi pencari berikutnya.'),
+    item('Lompat Tali Karet', 'Melompati karet gelang yang direntangkan teman, dengan ketinggian bertingkat.'),
+    item('Gobak Sodor Penjaga Garis', 'Menghadang lawan agar tidak melewati garis batas yang dijaga.'),
+    item('Bentengan Rebut Benteng', 'Adu strategi untuk menyentuh markas lawan tanpa tertangkap.'),
+    item('Congklak Biji Lubang', 'Memindahkan biji-bijian ke lubang papan kayu, siapa terbanyak menang.'),
+    item('Gasing Kayu Berputar', 'Memutar gasing kayu dengan tali, siapa paling lama berputar.'),
+    item('Layang-layang Gelasan', 'Menerbangkan layang-layang dan mengadu dengan layang lain.'),
+    item('Kelereng Tembak Bidik', 'Menyentil kelereng untuk mengenai kelereng lawan atau masuk lubang.'),
+    item('Sepak Takraw Rotan', 'Menendang bola rotan melewati net tanpa menggunakan tangan.'),
+    item('Egrang Bambu Tinggi', 'Berjalan menggunakan bambu tinggi yang dipijak, menjaga keseimbangan.'),
+    item('Engklek Satu Kaki', 'Melompat dengan satu kaki pada kotak-kotak gambar di tanah.'),
+    item('Balap Karung Lompat', 'Lomba lari dengan kaki di dalam karung, melompat ke garis finish.'),
+    item('Kuda-kudaan Bambu', 'Berlari dengan "kuda" dari bambu, seperti balap kuda.'),
+    item('Boy-boyan Batu Tumpuk', 'Melempar batu ke tumpukan batu lain, menjatuhkan sebanyak mungkin.'),
+    item('Tarik Tambang Tali', 'Dua tim saling tarik-menarik tali, siapa yang lebih kuat.'),
+    item('Lomba Kerupuk Tangan Terikat', 'Makan kerupuk dengan tangan diikat ke belakang, siapa cepat.'),
+    item('Panjat Pinang Minyak', 'Memanjat pohon pinang yang dilumuri minyak untuk ambil hadiah.'),
+    item('Bakiak Kayu Bersama', 'Berjalan bersama dengan bakiak kayu bertiga, kompak dan seimbang.'),
+  ]
+});
+DATA.push({
+  cat:'id', sub:'Permainan Fisik & Sosial',
+  items: [
+    item('Ular Naga Berantai', 'Berbaris seperti ular, saling memegang pinggang dan berjalan berkelok.'),
+    item('Kucing-kucingan Kejar', 'Satu orang jadi kucing, mengejar pemain lain yang jadi tikus.'),
+    item('Polisi Maling Tangkap', 'Satu tim jadi polisi, satu tim jadi maling, saling kejar dan tangkap.'),
+    item('Perang Air Pistol Plastik', 'Bermain perang menggunakan pistol air, basah-basahan.'),
+    item('Tikus Kucing Lingkaran', 'Duduk melingkar, satu jadi tikus di luar, satu kucing di dalam.'),
+    item('Tembak-tembakan Pistol Mainan', 'Perang-perangan dengan pistol mainan yang menembak peluru plastik.'),
+    item('Dokter-dokteran Peran', 'Bermain peran sebagai dokter dan pasien, menggunakan alat mainan.'),
+    item('Masak-masakan Daun', 'Bermain masak menggunakan daun-daunan dan ranting sebagai bahan.'),
+    item('Pasar-pasaran Jual Beli', 'Simulasi jual beli di pasar dengan barang-barang mainan.'),
+    item('Guru-guruan Papan Tulis', 'Bermain peran sebagai guru mengajar di papan tulis kecil.'),
+    item('Pesawat Kertas Lempar', 'Melipat kertas jadi pesawat dan melombakan siapa terbang terjauh.'),
+    item('Kapal Sabut Kelapa', 'Membuat kapal dari sabut kelapa dan memainkannya di air.'),
+  ]
+});
+DATA.push({
+  cat:'id', sub:'Mainan & Koleksi Lokal',
+  items: [
+    item('Yoyo Tali Naik Turun', 'Memainkan yoyo dengan tali, membuatnya naik turun dan berputar.'),
+    item('Tamiya Mobil Balap Mini', 'Balapan mobil mini di lintasan khusus, dengan baterai.'),
+    item('Balapan Lintasan Tamiya', 'Membuat lintasan sendiri dan balapan Tamiya.'),
+    item('Dingdong Mesin Arcade', 'Bermain mesin arcade seperti Street Fighter, Pac-Man, dll.'),
+    item('Tazos Keping Koleksi Snack', 'Mengumpulkan kepingan Tazos dari bungkus snack, lalu main adu.'),
+    item('Kartu Pokemon Tukar', 'Mengoleksi dan bertukar kartu Pokemon, lalu bermain battle.'),
+    item('Stiker Album Lengkap', 'Mengumpulkan stiker untuk mengisi album, saling tukar.'),
+    item('Boneka Barbie', 'Bermain peran dengan boneka Barbie, mendandaninya.'),
+    item('Action Figure Ultraman', 'Bermain perang dengan action figure Ultraman dan monster.'),
+    item('Bola Bekel Pantul', 'Melempar bola kecil dan menangkap kembali sambil mengambil biji.'),
+    item('Sempoa Berhitung', 'Alat hitung manual dengan manik-manik geser.'),
+    item('Rubik Kubus Putar', 'Memutar kubus berwarna agar setiap sisi memiliki warna yang sama.'),
+  ]
+});
+
+// ── Asia Timur ──
+DATA.push({
+  cat:'as', sub:'Jepang',
+  items: [
+    item('Kendama Bola Kayu Tangkap', 'Tangkap bola kayu yang tergantung dengan mangkuk kecil, lalu lakukan trik.'),
+    item('Beyblade Gasing Adu Spin', 'Adu gasing di stadium, siapa yang tetap berputar paling lama.'),
+    item('Origami Lipat Kertas', 'Melipat kertas menjadi berbagai bentuk seperti burung, katak, dll.'),
+    item('Karuta Kartu Puisi Cepat', 'Mendengarkan puisi dan mengambil kartu yang sesuai lebih cepat.'),
+    item('Fukuwarai Wajah Tutup Mata', 'Menempelkan wajah lucu pada kertas dengan mata tertutup.'),
+    item('Jan-ken-pon Gunting Batu Kertas', 'Permainan suit Jepang, gunting kalah batu, batu kalah kertas, kertas kalah gunting.'),
+    item('Menko Kartu Tepuk Angin', 'Menepuk kartu di lantai agar terbalik, menggunakan angin dari telapak tangan.'),
+    item('Koma Kayu Berputar', 'Memutar gasing kayu dengan tali di tangan.'),
+    item('Hanetsuki Bulutangkis Tradisional', 'Memukul kok dengan dayung kayu, seperti bulu tangkis Jepang.'),
+    item('Sugoroku Ular Tangga Jepang', 'Permainan dadu dan papan dengan tema Jepang.'),
+    item('Otedama Bantal Lempar Tangkap', 'Melempar dan menangkap bantal kecil sambil bernyanyi.'),
+    item('Ayatori Tali Jari', 'Membentuk pola-pola dari tali yang direntangkan di jari.'),
+  ]
+});
+DATA.push({
+  cat:'as', sub:'Korea',
+  items: [
+    item('Yutnori Lempar Kayu Papan', 'Melempat kayu stik, gerakkan pion di papan sesuai hasil lemparan.'),
+    item('Gong-gi Batu Kecil Tangkap', 'Melempar dan menangkap batu kecil, mirip bekel.'),
+    item('Ddakji Kartu Tepuk', 'Menepuk kartu kertas agar terbalik, siapa berhasil ambil kartu lawan.'),
+    item('Paengi Chi Gasing Korea', 'Memutar gasing kayu dengan cambuk kecil.'),
+    item('Neolttwigi Jungkat-jungkit Lompat', 'Melompat dari ujung papan jungkat-jungkit, melambung tinggi.'),
+    item('Jegichagi Bulu Kaki Tendang', 'Menendang bola bulu agar tidak jatuh, seperti sepak takraw.'),
+    item('Ssireum Gulat Tradisional', 'Gulat tradisional Korea dengan sabuk, siapa yang menjatuhkan lawan.'),
+    item('Tuho Panah Masuk Tabung', 'Melempar panah ke dalam tabung dari jarak tertentu.'),
+  ]
+});
+DATA.push({
+  cat:'as', sub:'Tiongkok',
+  items: [
+    item('Jianzi Bulu Ayam Tendang Kaki', 'Menendang kok bulu ayam dengan kaki, menjaga agar tidak jatuh.'),
+    item('Kongzhu Diabolo Gasing Tali', 'Memutar gasing dua kerucut dengan tali, lalu melempar dan menangkap.'),
+    item('Mahjong Ubin Strategi', 'Permainan ubin strategi dengan pola dan kombinasi.'),
+    item('Weiqi Go Strategi Hitam Putih', 'Permainan papan strategi kuno dengan batu hitam-putih.'),
+    item('Tali Loncat Bersama', 'Lompat tali bersama dengan dua orang memutar tali.'),
+    item('Tangram Tujuh Kepingan Bentuk', 'Menyusun tujuh kepingan menjadi berbagai bentuk.'),
+    item('Layang Naga Panjang', 'Menerbangkan layang-layang berbentuk naga panjang.'),
+  ]
+});
+
+// ── Asia Tenggara ──
+DATA.push({
+  cat:'sea', sub:'Malaysia & Singapura',
+  items: [
+    item('Gasing Kayu Besar', 'Memutar gasing kayu besar dengan tali, sampai berhenti.'),
+    item('Wau Layang Hias', 'Menerbangkan layang-layang berhias indah khas Malaysia.'),
+    item('Congkak Biji Kerang', 'Permainan papan dengan biji kerang, mirip congklak.'),
+    item('Sepak Takraw Kaki', 'Menendang bola rotan dengan kaki, kepala, dada melewati net.'),
+    item('Batu Seremban Kerikil Tangkap', 'Melempar dan menangkap kerikil, mirip batu bekel.'),
+    item('Galah Panjang Halang', 'Menghadang lawan melewati garis, mirip gobak sodor.'),
+    item('Main Getah Lompat Karet', 'Lompat tali karet dengan ketinggian bertingkat.'),
+    item('Bola Tin Tendang Kaleng', 'Menendang kaleng dan berhitung seberapa jauh.'),
+    item('Polis Sentri Sembunyi', 'Permainan kejar-kejaran dengan markas dan penjaga.'),
+  ]
+});
+DATA.push({
+  cat:'sea', sub:'Filipina',
+  items: [
+    item('Piko Engklek Satu Kaki', 'Lompat satu kaki di kotak-kotak angka, ambil batu.'),
+    item('Patintero Garis Sentuh', 'Melewati garis yang dijaga lawan tanpa tersentuh.'),
+    item('Tumbang Preso Kaleng', 'Menjatuhkan kaleng dengan lemparan, lalu kejar.'),
+    item('Luksong Tinik Duri Lompat', 'Melompati rintangan yang semakin tinggi.'),
+    item('Sipa Bulu Tendang', 'Menendang kok bulu, mirip sepak takraw.'),
+    item('Teks Kartu Koleksi', 'Mengoleksi kartu bergambar dan bertukar.'),
+    item('Dampa Kartu Tepuk', 'Menepuk kartu hingga terbalik, mirip Menko.'),
+    item('Agawan Base Rebut Markas', 'Rebut markas lawan tanpa tertangkap.'),
+    item('Taguan Petak Umpet', 'Petak umpet khas Filipina.'),
+  ]
+});
+DATA.push({
+  cat:'sea', sub:'Thailand & Vietnam',
+  items: [
+    item('Takraw Lingkaran', 'Menendang bola rotan ke atas dan menjaga agar tidak jatuh.'),
+    item('Con Lempar Kantung', 'Melempar kantung berisi pasir ke sasaran.'),
+    item('O An Quan Biji Lubang Vietnam', 'Permainan papan biji lubang khas Vietnam.'),
+    item('Keo Co Tarik Tambang', 'Tarik tambang, siapa yang lebih kuat.'),
+    item('Nhay Day Lompat Tali', 'Lompat tali dengan irama.'),
+    item('Choi Khang Gundu', 'Permainan tradisional Vietnam dengan tongkat dan bola.'),
+  ]
+});
+
+// ── Asia Selatan ──
+DATA.push({
+  cat:'sa', sub:'India & Sekitar',
+  items: [
+    item('Kabaddi Sentuh Napas Tahan', 'Menyerang markas lawan sambil menahan napas dan menyentuh lawan.'),
+    item('Gilli-danda Tongkat Pukul', 'Memukul tongkat pendek dengan tongkat panjang, lalu berlari.'),
+    item('Kho Kho Kejar Duduk', 'Permainan kejar-kejaran dengan pemain duduk bersila.'),
+    item('Pittu Garam Batu Tumpuk', 'Menjatuhkan tumpukan batu dan merebutnya sebelum lawan mengembalikan.'),
+    item('Kancha Kelereng India', 'Bermain kelereng dengan aturan khas India.'),
+    item('Lagori Batu Susun Roboh', 'Melempar bola ke tumpukan batu hingga roboh.'),
+    item('Pachisi Ular Tangga Asli', 'Permainan papan tertua, mirip ular tangga.'),
+    item('Pallankuzhi Biji Lubang Tamil', 'Permainan papan biji lubang dari Tamil Nadu.'),
+    item('Stapoo Engklek India', 'Engklek dengan pola kotak-kotak.'),
+    item('Chhupan Chhupai Sembunyi', 'Petak umpet khas India.'),
+  ]
+});
+
+// ── Eropa ──
+DATA.push({
+  cat:'eu', sub:'Eropa Barat',
+  items: [
+    item('Hopscotch Engklek Kapur', 'Lompat satu kaki di kotak-kotak yang digambar kapur.'),
+    item('Conkers Biji Kastanye Adu', 'Adu biji kastanye dengan cara dipukul, siapa yang pecah.'),
+    item('British Bulldog Kejar Tangkap', 'Satu orang jadi penjaga, tangkap yang lain saat mereka berlari.'),
+    item('Tag Kejar Sentuh', 'Permainan kejar sederhana, sentuh lawan untuk jadi "it".'),
+    item('Hide and Seek Sembunyi', 'Petak umpet klasik.'),
+    item('Marbles Kelereng Jari', 'Main kelereng dengan jari di tanah.'),
+    item('Skipping Rope Lompat Tali', 'Lompat tali perorangan atau bersama.'),
+    item('Red Light Green Light', 'Berjalan saat lampu hijau, berhenti saat merah.'),
+    item('Duck Duck Goose', 'Duduk melingkar, satu berjalan menepuk kepala sambil bilang "bebek" dan "angsa".'),
+    item('Simon Says Perintah Ikut', 'Lakukan perintah hanya jika diawali "Simon says".'),
+    item('Leapfrog Lompat Punggung', 'Lompati punggung teman yang membungkuk.'),
+  ]
+});
+DATA.push({
+  cat:'eu', sub:'Eropa Utara & Timur',
+  items: [
+    item('Kubb Kayu Lempar Skandinavia', 'Lempar kayu untuk menjatuhkan bidak lawan, mirip bowling kayu.'),
+    item('Molkky Peg Nomor Lempar Finlandia', 'Lempar kayu ke arah nomor, jatuhkan untuk mendapat skor.'),
+    item('Gorodki Kayu Susun Serang', 'Susun kayu lalu lempar kayu lain untuk menjatuhkannya.'),
+    item('Lapta Kayu Bola Rusia', 'Permainan memukul bola dengan kayu, berlari antar base.'),
+    item('Palant Tongkat Bola Polandia', 'Permainan seperti kasti Polandia.'),
+  ]
+});
+DATA.push({
+  cat:'eu', sub:'Permainan Meja & Kartu',
+  items: [
+    item('Uno Kartu Warna Nomor', 'Kartu dengan warna dan angka, habiskan kartu tercepat.'),
+    item('Catur Strategi', 'Permainan papan strategi dua pemain.'),
+    item('Dama Papan Checkers', 'Permainan dam, lompati bidak lawan.'),
+    item('Jenga Balok Cabut Tumpuk', 'Cabut balok dari menara tanpa merobohkan.'),
+    item('Monopoly Properti Dadu', 'Beli properti, bangun rumah, dapatkan uang sewa.'),
+    item('Scrabble Kata Huruf', 'Susun kata dari huruf-huruf di papan.'),
+    item('Snap Kartu Cepat Teriak', 'Kartu dengan gambar yang sama, siapa cepat teriak "snap".'),
+    item('Snakes and Ladders Ular Tangga', 'Dadu dan papan, naik tangga turun ular.'),
+    item('Ludo Dadu Pion Warna', 'Jalankan empat pion ke tengah papan.'),
+    item('Connect Four Empat Beruntun', 'Lempar cakram warna, siapa dapat 4 beruntun.'),
+    item('Old Maid Kartu Janda Tua', 'Kartu pasangan, hindari kartu janda tua.'),
+  ]
+});
+
+// ── Amerika ──
+DATA.push({
+  cat:'am', sub:'Amerika Utara',
+  items: [
+    item('Four Square Kotak Empat Pantul', 'Pantulkan bola ke kotak lawan, siapa yang gagal keluar.'),
+    item('Kickball Tendang Bola', 'Tendang bola lalu lari ke base, seperti baseball.'),
+    item('Dodgeball Lempar Hindari', 'Lempar bola ke lawan, hindari lemparan.'),
+    item('Capture the Flag Bendera Rebut', 'Rebut bendera lawan dan bawa ke markas.'),
+    item('Freeze Tag Beku Sentuhan', 'Sentuh lawan lalu mereka membeku, rekan bisa menyentuh untuk melepas.'),
+    item('Red Rover Rantai Terobos', 'Berpegangan tangan membentuk rantai, salah satu lari menerobos.'),
+    item('Tug of War Tarik Tambang', 'Tarik tambang antar tim.'),
+    item('Hula Hoop Lingkar Pinggang', 'Memutar gelang di pinggang tanpa jatuh.'),
+    item('Jump Rope Double Dutch', 'Lompat tali dengan dua tali diputar bersamaan.'),
+    item('Jacks Bintang Tangkap', 'Melempar bintang logam dan menangkapnya di punggung tangan.'),
+    item('Hacky Sack Bulu Tendang', 'Tendang bola kecil berisi bulu agar tidak jatuh.'),
+    item('MASH Ramalan Kertas Masa Depan', 'Permainan kertas untuk meramal masa depan.'),
+    item('Pogs Karton Bulat Tepuk', 'Tumpuk kepingan karton, lempar kepingan berat untuk menjatuhkan.'),
+  ]
+});
+DATA.push({
+  cat:'am', sub:'Amerika Latin',
+  items: [
+    item('Rayuela Engklek Kapur', 'Engklek ala Amerika Latin.'),
+    item('Trompo Gasing Kayu Tali', 'Gasing kayu dengan tali, mirip gasing.'),
+    item('Canicas Kelereng', 'Kelereng khas Latin.'),
+    item('Rondas Infantiles Lagu Putar', 'Permainan bernyanyi sambil berputar.'),
+    item('Tejo Lempar Logam Tanah', 'Lempar logam ke sasaran tanah.'),
+    item('Balero Bola Kayu Tusuk', 'Bola kayu di tali, tusukkan ke batang.'),
+    item('Papalote Layang Meksiko', 'Layang-layang khas Meksiko.'),
+    item('La Gallinita Ciega Buta Ayam', 'Buta-buta, tutup mata lalu tangkap teman.'),
+  ]
+});
+
+// ── Afrika ──
+DATA.push({
+  cat:'af', sub:'Afrika Tradisional',
+  items: [
+    item('Mancala Biji Lubang Strategi', 'Permainan papan biji lubang strategi.'),
+    item('Morabaraba Papan Afrika Selatan', 'Permainan papan tiga baris dari Afrika Selatan.'),
+    item('Ampe Lompat Tepuk Ghana', 'Lompat dan tepuk tangan bersamaan.'),
+    item('Pilolo Sembunyi Benda Ghana', 'Sembunyikan benda, cari berdasarkan petunjuk.'),
+    item('Uwi Biji Lubang Nigeria', 'Permainan biji lubang dari Nigeria.'),
+    item('Kigogo Biji Lubang Tanzania', 'Permainan biji lubang Tanzania.'),
+    item('Dibeke Bola Tendang', 'Tendang bola dengan aturan khas.'),
+    item('Ntotoi Kejar Afrika', 'Permainan kejar Afrika.'),
+    item('Kudoda Batu Tumpuk Roboh', 'Tumpuk batu, lempar batu lain untuk menjatuhkan.'),
+  ]
+});
+
+// ── Timur Tengah ──
+DATA.push({
+  cat:'mid', sub:'Timur Tengah & Arab',
+  items: [
+    item('Dama Papan Arab', 'Permainan papan seperti dam.'),
+    item('Qirq Strategi Tiga Beruntun', 'Tic-tac-toe versi Timur Tengah.'),
+    item('Mancala Versi Arab', 'Mancala khas Arab.'),
+    item('El Dokan Pasar-pasaran', 'Permainan pasar-pasaran.'),
+    item('Aseerta Sembunyi Tebak', 'Tebak siapa yang bersembunyi.'),
+    item('Leila Malam Kejar', 'Kejar-kejaran di malam hari.'),
+    item('Hammam Hammam Lagu Mandi', 'Bernyanyi sambil bertepuk.'),
+    item('Kheba Ala Kheba Lompat', 'Lompat-lompat dengan irama.'),
+    item('Dabke Tari Bersama', 'Tari tradisional Dabke.'),
+  ]
+});
+
+// ── Digital ──
+DATA.push({
+  cat:'dig', sub:'Konsol & Genggam Ikonik',
+  items: [
+    item('Game Boy Genggam Nintendo', 'Konsol genggam ikonik 8-bit.'),
+    item('Super Nintendo SNES', 'Konsol 16-bit dengan grafis lebih baik.'),
+    item('Sega Genesis Mega Drive', 'Konsol 16-bit pesaing SNES.'),
+    item('PlayStation 1 Pertama', 'Konsol CD-ROM pertama yang legendaris.'),
+    item('Nintendo 64 Tiga Dimensi', 'Konsol 3D dengan joystick analog.'),
+    item('Game Boy Color', 'Game Boy dengan layar berwarna.'),
+    item('Game Boy Advance Horizontal', 'Game Boy dengan bentuk horizontal.'),
+    item('PlayStation 2 Generasi Baru', 'Konsol paling laris sepanjang masa.'),
+    item('GameCube Kubus Nintendo', 'Konsol Nintendo berbentuk kubus.'),
+    item('Xbox Original Hijau', 'Konsol pertama Microsoft dengan controller besar.'),
+  ]
+});
+DATA.push({
+  cat:'dig', sub:'Mainan Digital & Virtual Pet',
+  items: [
+    item('Tamagotchi Peliharaan Telur Digital', 'Pelihara makhluk digital di layar kecil, beri makan dan main.'),
+    item('Digimon Virtual Pet', 'Versi Digimon dari Tamagotchi, bisa bertarung.'),
+    item('Yoyo Digital Gyruss', 'Mainan yoyo digital dengan layar LCD.'),
+    item('Game Watch LCD Kecil', 'Jam tangan dengan game sederhana LCD.'),
+    item('Brick Game Tetris Genggam', 'Tetris genggam 8-bit.'),
+    item('Tiger Handheld LCD', 'Game genggam dengan grafis LCD.'),
+  ]
+});
+DATA.push({
+  cat:'dig', sub:'Game Ikonik Milenial',
+  items: [
+    item('Mario Bros Lompat Koin Jamur', 'Plumber ikonik melompati musuh dan mengumpulkan koin.'),
+    item('Pokemon Tangkap Latih Tarung', 'Tangkap monster, latih, dan bertarung.'),
+    item('Sonic Kecepatan Biru', 'Landak biru yang berlari cepat mengumpulkan cincin.'),
+    item('Crash Bandicoot Kotak Putar', 'Bandicoot oranye memutar dan melompat.'),
+    item('Tetris Blok Susun Jatuh', 'Susun balok jatuh membentuk garis.'),
+    item('Snake Nokia Panjang', 'Ular panjang, makan makanan, jangan menabrak dinding.'),
+    item('Pac-Man Makan Titik Hantu', 'Makan titik kuning dan hindari hantu.'),
+    item('Donkey Kong Gorila Laras', 'Gorila melempar laras, selamatkan gadis.'),
+    item('Zelda Petualang Hijau', 'Petualangan Link di Hyrule.'),
+    item('Kirby Hisap Musuh Pink', 'Hisap musuh dan dapatkan kekuatan mereka.'),
+    item('Contra Dua Orang', 'Shooter side-scrolling dua pemain.'),
+    item('Street Fighter Hadouken Joystick', 'Pertarungan one-on-one dengan Hadouken.'),
+    item('Spyro Naga Ungu Kecil', 'Naga ungu mengembara dunia.'),
+  ]
+});
+DATA.push({
+  cat:'dig', sub:'PC & Arcade Milenial',
+  items: [
+    item('Dingdong Mesin Arcade Koin', 'Bermain di mesin arcade dengan koin.'),
+    item('Pinball Bola Pegas Flipper', 'Pantulkan bola dengan flipper di mesin pinball.'),
+    item('Air Hockey Meja Udara', 'Bermain hoki di meja berlubang udara.'),
+    item('Dance Dance Revolution Kaki Langkah', 'Ikuti panah di layar dengan menari di platform.'),
+    item('Pump It Up Panah', 'Versi DDR dengan panah di lantai.'),
+    item('House of the Dead Tembak', 'Tembak zombie di game arcade.'),
+    item('Tekken Joystick Arcade', 'Pertarungan 3D dengan joystick.'),
+    item('Minesweeper Ranjau Angka', 'Cari ranjau dengan petunjuk angka.'),
+    item('Solitaire Kartu PC', 'Main kartu sendiri di komputer.'),
+    item('Pinball 3D Space Cadet', 'Pinball 3D bawaan Windows.'),
+    item('Paint Gambar Windows', 'Menggambar di Paint.'),
+    item('Counter-Strike Awal PC', 'FPS taktis tim vs tim.'),
+    item('Ragnarok Online MMORPG Warnet', 'MMORPG populer di warnet.'),
+    item('Warcraft Strategi Peta', 'Strategi real-time dengan peta.'),
+  ]
+});
+
+// ── Universal ──
+DATA.push({
+  cat:'uni', sub:'Tanpa Alat Universal',
+  items: [
+    item('Gunting Batu Kertas Tangan', 'Suit tiga jari, siapa menang.'),
+    item('Suit Jari Hompimpa', 'Versi suit Indonesia.'),
+    item('Berjalan Buta Tutup Mata', 'Berjalan dengan mata tertutup, dipandu suara.'),
+    item('Bisik Berantai Telepon Rusak', 'Bisikkan pesan ke telinga, lihat hasil akhir.'),
+    item('Tebak Angka Pikiran', 'Tebak angka yang dipikirkan orang lain.'),
+    item('Cerita Bersambung Giliran', 'Setiap orang melanjutkan cerita.'),
+    item('Tebak Mimik Tanpa Suara', 'Peragakan mimik, tebak maksudnya.'),
+    item('Sembunyi Cari Hide Seek', 'Petak umpet universal.'),
+    item('Kejar Tangkap Tag', 'Kejar-kejaran biasa.'),
+    item('Lingkaran Lagu Putar', 'Bernyanyi sambil berputar.'),
+    item('Kursi Musik Rebutan', 'Kursi lebih sedikit dari pemain, rebut saat musik berhenti.'),
+    item('Patung-patungan Beku Diam', 'Beku seperti patung saat musik berhenti.'),
+  ]
+});
+DATA.push({
+  cat:'uni', sub:'Mainan Universal Milenial',
+  items: [
+    item('Yoyo Tali Naik Turun', 'Yoyo klasik.'),
+    item('Kelereng Bola Kaca Adu', 'Adu kelereng.'),
+    item('Lompat Tali Tunggal', 'Lompat tali sendiri.'),
+    item('Lompat Tali Double Dutch', 'Lompat tali dua tali.'),
+    item('Hula Hoop Pinggul', 'Memutar gelang di pinggul.'),
+    item('Frisbee Cakram Terbang', 'Lempar cakram terbang.'),
+    item('Origami Lipat Kertas', 'Lipat kertas jadi bentuk.'),
+    item('Rubik Kubus Enam Sisi', 'Kubus rubik.'),
+    item('Layangan Terbang Angin', 'Terbangkan layang-layang.'),
+    item('Karet Gelang Anyam Bentuk', 'Anyam karet gelang jadi bentuk.'),
+    item('Balon Air Lempar Meledak', 'Lempar balon air ke teman.'),
+    item('Gelembung Sabun Tiup', 'Tiup gelembung sabun.'),
+    item('Kapur Gambar Aspal', 'Gambar di aspal dengan kapur.'),
+    item('Bola Bekel Pantul Ambil', 'Bermain bekel.'),
+  ]
+});
+DATA.push({
+  cat:'uni', sub:'Permainan Imajinasi & Peran',
+  items: [
+    item('Dokter-dokteran Peran Sakit', 'Bermain peran dokter dan pasien.'),
+    item('Pasar-pasaran Jual Beli', 'Simulasi pasar.'),
+    item('Perang-perangan Tembak', 'Perang mainan.'),
+    item('Polisi Maling Kejar', 'Polisi dan maling.'),
+    item('Guru Murid Papan Tulis', 'Bermain guru.'),
+    item('Masak-masakan Daun Mainan', 'Masak-masakan.'),
+    item('Rumah-rumahan Bangun Sendiri', 'Bangun rumah dari barang bekas.'),
+    item('Pilot Pesawat Berlari Sayap', 'Menjadi pilot dengan tangan terbuka.'),
+    item('Superhero Jubah Kain', 'Bermain superhero dengan jubah.'),
+    item('Bajak Laut Pedang Kayu', 'Bajak laut dengan pedang kayu.'),
+    item('Putri Mahkota Kertas', 'Putri dengan mahkota kertas.'),
+    item('Petualang Hutan Halaman', 'Menjelajah halaman seperti petualang.'),
+  ]
+});
+
+// ============================================================
+//  TAMBAHAN DARI GSAP 100
+// ============================================================
+const GAMES_100 = [
+  { cat:'id', sub:'Permainan Tradisional Nusantara', items:[
+    item('Petak Umpet', 'Satu orang mencari, sisanya bersembunyi.'),
+    item('Gobak Sodor', 'Menghadang lawan agar tidak melewati garis batas.'),
+    item('Benteng-bentengan', 'Adu strategi untuk menyentuh markas lawan.'),
+    item('Lompat Tali', 'Melompati untaian karet gelang dengan ketinggian bertingkat.'),
+    item('Egrang', 'Berjalan menggunakan galah bambu yang diberi pijakan.'),
+    item('Balap Karung', 'Lomba lari dengan kaki di dalam karung goni.'),
+    item('Tarik Tambang', 'Dua tim saling tarik-menarik tali tambang.'),
+    item('Kelereng', 'Menyentil bola kaca kecil untuk mengenai target.'),
+    item('Engklek', 'Melompat dengan satu kaki pada kotak-kotak di tanah.'),
+    item('Congklak', 'Memindahkan biji-bijian ke lubang papan kayu.'),
+    item('Bola Kasti', 'Permainan memukul bola dan berlari ke pos-pos aman.'),
+    item('Sepak Bola', 'Memasukkan bola ke gawang lawan menggunakan kaki.'),
+    item('Basket', 'Memasukkan bola ke dalam ring.'),
+    item('Bulu Tangkis', 'Memukul kok melewati net menggunakan raket.'),
+    item('Tenis Meja', 'Memukul bola pingpong di atas meja khusus.'),
+    item('Lari Estafet', 'Berlari sambil menyerahkan tongkat ke rekan tim.'),
+    item('Tag (Kejar-kejaran)', 'Satu orang menjadi "jadi" dan harus menyentuh orang lain.'),
+    item('Lampu Merah Lampu Hijau', 'Bergerak saat "hijau", berhenti saat "merah".'),
+    item('Panjat Pinang', 'Memanjat pohon pinang licin untuk mengambil hadiah.'),
+    item('Lari Kelereng', 'Membawa kelereng di sendok dengan mulut sambil berlari.'),
+  ]},
+  { cat:'eu', sub:'Permainan Papan Klasik', items:[
+    item('Catur', 'Strategi perang di atas papan kotak hitam-putih.'),
+    item('Monopoli', 'Permainan transaksi properti dan ekonomi.'),
+    item('Ular Tangga', 'Berusaha mencapai finis dengan bantuan dadu.'),
+    item('Scrabble', 'Menyusun kata dari kepingan huruf.'),
+    item('Ludo', 'Menjalankan empat pion menuju rumah di tengah papan.'),
+    item('Uno', 'Menghabiskan kartu di tangan dengan mencocokkan warna/angka.'),
+    item('Uno Stacko', 'Mengambil balok dari menara tanpa membuatnya roboh.'),
+    item('Halma', 'Memindahkan semua pion ke sudut lawan.'),
+    item('Domino', 'Menyambungkan kartu berdasarkan jumlah titik yang sama.'),
+    item('Remi', 'Mengumpulkan seri atau grup kartu yang sama.'),
+    item('Poker', 'Permainan kartu strategi dan taruhan.'),
+    item('Werewolf', 'Mencari serigala di antara warga.'),
+    item('Othello', 'Membalikkan kepingan lawan menjadi warna kita.'),
+    item('Mahjong', 'Permainan strategi menggunakan ubin simbol.'),
+    item('Jenga', 'Menarik balok kayu tanpa menjatuhkan menara.'),
+    item('Risk', 'Permainan strategi penaklukan wilayah dunia.'),
+    item('Dungeons & Dragons', 'Permainan peran (RPG) meja dengan narasi.'),
+    item('Catan', 'Membangun pemukiman dan perdagangan sumber daya.'),
+    item('Pictionary', 'Menebak kata berdasarkan gambar.'),
+    item('Tebak Gaya', 'Menebak kata berdasarkan gerakan tubuh.'),
+  ]},
+  { cat:'dig', sub:'Genre Digital Modern', items:[
+    item('RPG (Role Playing Game)', 'Memainkan karakter dalam alur cerita mendalam.'),
+    item('FPS (First Person Shooter)', 'Permainan tembak-menembak sudut pandang orang pertama.'),
+    item('MOBA (Multiplayer Online Battle Arena)', 'Pertempuran arena daring antar tim (seperti MLBB).'),
+    item('Battle Royale', 'Bertahan hidup hingga menjadi yang terakhir.'),
+    item('Platformer', 'Melompati rintangan (seperti Super Mario).'),
+    item('Sandbox', 'Membangun dunia sesuai kreativitas (seperti Minecraft).'),
+    item('Simulasi', 'Menjalani kehidupan atau pekerjaan (seperti The Sims).'),
+    item('Racing', 'Balapan kendaraan berkecepatan tinggi.'),
+    item('Puzzle Digital', 'Menyusun gambar atau logika (seperti Tetris).'),
+    item('Rhythm Game', 'Mengikuti ketukan musik dengan tepat.'),
+    item('Horror Survival', 'Bertahan hidup di lingkungan menakutkan.'),
+    item('RTS (Real-Time Strategy)', 'Mengatur pasukan secara langsung.'),
+    item('Sport Digital', 'Simulasi olahraga seperti FIFA atau NBA.'),
+    item('Gacha', 'Mengoleksi karakter melalui sistem keberuntungan.'),
+    item('Visual Novel', 'Membaca cerita dengan pilihan alur.'),
+    item('Fighting Game', 'Pertarungan satu lawan satu (seperti Tekken).'),
+    item('Open World', 'Menjelajahi peta yang sangat luas tanpa batas.'),
+    item('Stealth', 'Menyelesaikan misi dengan cara bersembunyi.'),
+    item('Point & Click', 'Petualangan dengan mengeklik objek di layar.'),
+    item('Endless Runner', 'Berlari sejauh mungkin tanpa henti.'),
+  ]},
+  { cat:'uni', sub:'Asah Otak & Teka-teki', items:[
+    item('Teka-Teki Silang', 'Mengisi kotak kosong berdasarkan petunjuk kata.'),
+    item('Sudoku', 'Mengisi angka 1-9 tanpa ada yang kembar.'),
+    item('Rubik', 'Menyusun warna kubus agar sama di setiap sisi.'),
+    item('Puzzle Jigsaw', 'Menyusun potongan gambar menjadi utuh.'),
+    item('Tebak-tebakan', 'Memberi teka-teki lucu atau sulit.'),
+    item('Cerdas Cermat', 'Adu cepat menjawab pertanyaan pengetahuan umum.'),
+    item('Mencari Jejak', 'Mengikuti petunjuk untuk menemukan lokasi akhir.'),
+    item('Escape Room', 'Memecahkan teka-teki untuk keluar ruangan.'),
+    item('Origami', 'Melipat kertas menjadi berbagai bentuk.'),
+    item('Mewarnai', 'Mengisi warna pada pola gambar yang ada.'),
+    item('Cerita Berantai', 'Melanjutkan kalimat cerita dari orang sebelumnya.'),
+    item('Stop Motion', 'Membuat film dari rangkaian foto benda mati.'),
+    item('Lego', 'Membangun struktur menggunakan balok susun.'),
+    item('Brain Teasers', 'Logika pendek yang melatih ketajaman otak.'),
+    item('Scavenger Hunt', 'Mencari daftar barang di area tertentu.'),
+    item('20 Questions', 'Menebak benda hanya dengan 20 pertanyaan.'),
+    item('I Spy', 'Menebak benda berdasarkan ciri yang dilihat.'),
+    item('Simon Says', 'Mengikuti instruksi jika diawali kata Simon.'),
+    item('Tongue Twister', 'Mengucapkan kalimat sulit dengan cepat.'),
+    item('Memory Game', 'Mengingat posisi kartu yang tertutup.'),
+  ]},
+  { cat:'uni', sub:'Permainan Sosial Kelompok', items:[
+    item('Truth or Dare', 'Memilih berkata jujur atau tantangan fisik.'),
+    item('Never Have I Ever', 'Mengaku hal yang belum pernah dilakukan.'),
+    item('Musical Chairs', 'Berebut kursi saat musik berhenti.'),
+    item('Whisper Challenge', 'Membisikkan kalimat hingga orang terakhir.'),
+    item('Freeze Dance', 'Menari dan mematung saat musik berhenti.'),
+    item('Two Truths & A Lie', 'Menebak mana yang bohong dari 3 pernyataan.'),
+    item('Pillow Fight', 'Perang menggunakan bantal empuk.'),
+    item('Blindfold Walk', 'Berjalan mata tertutup dipandu suara teman.'),
+    item('The Floor is Lava', 'Berlagak lantai adalah lava panas.'),
+    item('Mafia', 'Mencari pengkhianat dalam kelompok.'),
+    item('Would You Rather', 'Memilih satu dari dua pilihan sulit.'),
+    item('Karaoke', 'Menyanyi bersama mengikuti lirik.'),
+    item('Air Hockey', 'Menembak piringan plastik di meja udara.'),
+    item('Dart', 'Melempar anak panah ke papan target.'),
+    item('Bowling', 'Menggelindingkan bola untuk menjatuhkan pin.'),
+    item('Paintball', 'Perang-perangan menggunakan peluru cat.'),
+    item('Laser Tag', 'Perang menggunakan senjata inframerah.'),
+    item('Billiard', 'Memasukkan bola ke lubang meja dengan stik.'),
+    item('Trampolin', 'Melompat setinggi mungkin di jaring elastis.'),
+    item('Hula Hoop', 'Memutar gelang besar di pinggang.'),
+  ]},
+];
+
+// ============================================================
+//  TAMBAHAN EXTRA
+// ============================================================
+const EXTRA = [
+  { cat:'id', sub:'Permainan Outdoor Tradisional', items:[
+    item('Bola Bekel', 'Bermain dengan bola kecil dan biji-bijian, melempar dan menangkap.'),
+    item('Lompat Kangkang', 'Melompati teman yang membungkuk, seperti lompat kambing.'),
+    item('Kuda Bisik', 'Berbisik pesan ke telinga berantai.'),
+    item('Pletokan', 'Menembak dengan ketapel atau senapan bambu.'),
+    item('Sumpit', 'Memakan kerupuk dengan sumpit, siapa cepat.'),
+    item('Gasing Pangkur', 'Gasing yang diputar dengan cara dipangkur.'),
+    item('Tepuk Bergambar', 'Tepuk tangan sambil menyebut nama gambar.'),
+  ]},
+  { cat:'as', sub:'Jepang', items:[
+    item('Daruma Otoshi', 'Memukul susunan cakram warna agar tidak menjatuhkan Daruma.'),
+    item('Koinobori', 'Membuat dan menerbangkan bendera ikan koin.'),
+    item('Kamifusen', 'Balon kertas yang ditiup dengan udara.'),
+    item('Nawatobi', 'Lompat tali ala Jepang.'),
+  ]},
+  { cat:'as', sub:'Korea', items:[
+    item('Jwibulnori', 'Permainan api tradisional Korea.'),
+  ]},
+  { cat:'sea', sub:'Thailand & Vietnam', items:[
+    item('Lam Klong', 'Permainan tradisional Thailand dengan tongkat.'),
+    item('Sabai', 'Lempar dan tangkap bantal.'),
+    item('Rumph', 'Permainan dengan bola kecil.'),
+    item('Bịt mắt bắt dê', 'Tutup mata tangkap kambing (buta-buta).'),
+    item('Cờ tướng', 'Catur Tiongkok versi Vietnam.'),
+  ]},
+  { cat:'sea', sub:'Malaysia & Singapura', items:[
+    item('Bola Jaring', 'Bermain netball.'),
+    item('Konda Kondi', 'Permainan tongkat dan bola.'),
+  ]},
+  { cat:'eu', sub:'Eropa Barat', items:[
+    item('Rounders', 'Permainan seperti baseball versi Inggris.'),
+    item('Cricket', 'Olahraga memukul bola dengan tongkat.'),
+    item('Schlagball', 'Versi Jerman dari rounders.'),
+    item('Völkerball', 'Dodgeball ala Jerman.'),
+    item('Morra', 'Permainan tebak jari Italia. Pemain mengacungkan jari dan menebak jumlah total.'),
+    item('Bocce', 'Lempar bola besi mendekati target.'),
+  ]},
+  { cat:'am', sub:'Amerika Utara', items:[
+    item('Cornhole', 'Melempar kantung berisi jagung ke papan berlubang.'),
+    item('Horseshoes', 'Melempar ladam kuda ke tiang.'),
+    item('Ladder Toss', 'Lempar bola gantung ke tangga.'),
+    item('Kan Jam', 'Lempar cakram ke kaleng, skor.'),
+    item('Gaga Ball', 'Seperti dodgeball di arena segi delapan.'),
+  ]},
+  { cat:'af', sub:'Afrika Tradisional', items:[
+    item('Oware', 'Mancala versi Ghana.'),
+    item('Morula', 'Permainan papan Afrika.'),
+    item('Diketo', 'Permainan batu kecil di lubang.'),
+  ]},
+  { cat:'mid', sub:'Timur Tengah & Arab', items:[
+    item('Tawla', 'Backgammon versi Arab.'),
+    item('Shesh Besh', 'Permainan dadu dan papan.'),
+  ]},
+  { cat:'dig', sub:'Genre Digital Modern', items:[
+    item('Grand Theft Auto', 'Game aksi dunia terbuka, kebebasan berkreasi.'),
+    item('Fortnite', 'Battle Royale dengan bangunan.'),
+    item('Among Us', 'Temukan pengkhianat di antara kru.'),
+    item('Valorant', 'FPS taktis 5v5.'),
+    item('Dota 2', 'MOBA klasik dengan hero unik.'),
+    item('Call of Duty', 'FPS perang modern.'),
+  ]},
+];
+
+// ============================================================
+//  GABUNGKAN DATA
+// ============================================================
+function mergeItems(cat, sub, newItems) {
+  const existing = DATA.find(d => d.cat === cat && d.sub === sub);
+  if (existing) {
+    const combined = [...existing.items, ...newItems];
+    const seen = new Set();
+    existing.items = combined.filter(item => {
+      const key = item.name;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  } else {
+    DATA.push({ cat, sub, items: [...newItems] });
+  }
+}
+
+GAMES_100.forEach(g => mergeItems(g.cat, g.sub, g.items));
+EXTRA.forEach(g => mergeItems(g.cat, g.sub, g.items));
+
+// ============================================================
+//  FUNGSI UTAMA — TAMPILAN KARTU DATAR (FLAT LIST)
+// ============================================================
+let activeFilter = 'all';
+let searchQuery  = '';
+
+function catInfo(id){
+  return CATEGORIES.find(c => c.id === id) || { icon:'🎮', label:id, color:'#2E7BD6' };
+}
+
+function buildDropdown(){
+  const list = document.getElementById('dropdownList');
+  list.innerHTML = '';
+
+  const allRow = document.createElement('div');
+  allRow.className = 'dropdown-item active';
+  allRow.dataset.id = 'all';
+  allRow.innerHTML = `<span class="dd-icon">📋</span><span>Semua Kategori</span>`;
+  allRow.onclick = () => selectCategory('all');
+  list.appendChild(allRow);
+
+  CATEGORIES.forEach(cat => {
+    const row = document.createElement('div');
+    row.className = 'dropdown-item';
+    row.dataset.id = cat.id;
+    row.innerHTML = `<span class="swatch" style="background:${cat.color}"></span><span>${cat.icon} ${cat.label}</span>`;
+    row.onclick = () => selectCategory(cat.id);
+    list.appendChild(row);
+  });
+}
+
+function selectCategory(id){
+  activeFilter = id;
+  const ddIcon = document.getElementById('ddIcon');
+  const ddLabel = document.getElementById('ddLabel');
+  if(id === 'all'){
+    ddIcon.textContent = '📋';
+    ddLabel.textContent = 'Semua Kategori';
+  } else {
+    const cat = catInfo(id);
+    ddIcon.textContent = cat.icon;
+    ddLabel.textContent = cat.label;
+  }
+  document.querySelectorAll('.dropdown-item').forEach(el => {
+    el.classList.toggle('active', el.dataset.id === id);
+  });
+  document.getElementById('catDropdown').classList.remove('open');
+  applyFilters();
+}
+
+document.getElementById('dropdownBtn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  document.getElementById('catDropdown').classList.toggle('open');
+});
+document.addEventListener('click', (e) => {
+  const dd = document.getElementById('catDropdown');
+  if (!e.target.closest('#catDropdown')) dd.classList.remove('open');
+});
+
+function applyFilters(){
+  searchQuery = document.getElementById('searchInput').value.toLowerCase().trim();
+  renderCards();
+}
+
+function flattenGames(){
+  const flat = [];
+  DATA.forEach(d => {
+    const cat = catInfo(d.cat);
+    d.items.forEach(item => {
+      flat.push({ name:item.name, desc:item.desc, cat:d.cat, sub:d.sub, catLabel:cat.label, icon:cat.icon, color:cat.color });
+    });
+  });
+  return flat;
+}
+
+const ALL_GAMES = flattenGames();
+
+function renderCards(){
+  const wrap = document.getElementById('cardsWrap');
+  const empty = document.getElementById('emptyState');
+  const countEl = document.getElementById('resultCount');
+  wrap.innerHTML = '';
+
+  const filtered = ALL_GAMES.filter(g => {
+    if (activeFilter !== 'all' && g.cat !== activeFilter) return false;
+    if (searchQuery && !g.name.toLowerCase().includes(searchQuery)) return false;
+    return true;
+  });
+
+  countEl.innerHTML = `Menampilkan <b>${filtered.length}</b> permainan`;
+  empty.style.display = filtered.length === 0 ? 'block' : 'none';
+
+  filtered.forEach((g, i) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.dataset.name = g.name;
+    card.style.setProperty('--cat-color', g.color);
+    card.style.setProperty('--badge-bg', hexToRgba(g.color, 0.12));
+    card.style.setProperty('--badge-color', g.color);
+    card.style.animationDelay = Math.min(i * 0.02, 0.4) + 's';
+    card.innerHTML = `
+      <div class="card-top">
+        <span class="card-num">${i + 1}.</span>
+        <span class="card-name">${g.name}</span>
+        <span class="card-badge">${g.catLabel}</span>
+      </div>
+      <div class="card-desc">${g.desc}</div>`;
+    wrap.appendChild(card);
+  });
+}
+
+function hexToRgba(hex, alpha){
+  const h = hex.replace('#','');
+  const bigint = parseInt(h.length === 3 ? h.split('').map(c=>c+c).join('') : h, 16);
+  const r = (bigint >> 16) & 255, g = (bigint >> 8) & 255, b = bigint & 255;
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
+// ============================================================
+//  FUNGSI PILIH ACAK
+// ============================================================
+function pickRandom() {
+  if (ALL_GAMES.length === 0) return;
+  const random = ALL_GAMES[Math.floor(Math.random() * ALL_GAMES.length)];
+
+  // Reset filter & search supaya kartu yang terpilih pasti terlihat
+  selectCategory('all');
+  document.getElementById('searchInput').value = '';
+  searchQuery = '';
+  renderCards();
+
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.card.highlight').forEach(el => el.classList.remove('highlight'));
+    const target = Array.from(document.querySelectorAll('.card')).find(el => el.dataset.name === random.name);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      target.classList.add('highlight');
+      setTimeout(() => target.classList.remove('highlight'), 4000);
+    }
+  });
+}
+
+// ============================================================
+//  TOMBOL SCROLL
+// ============================================================
+const scrollBtn = document.getElementById('scrollTopBtn');
+window.addEventListener('scroll', () => {
+  scrollBtn.classList.toggle('visible', window.scrollY > 300);
+});
+scrollBtn.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// ============================================================
+//  INIT
+// ============================================================
+buildDropdown();
+renderCards();
+
+document.getElementById('randomBtn').addEventListener('click', pickRandom);
+
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.shiftKey && (e.key === 'r' || e.key === 'R')) {
+    e.preventDefault();
+    pickRandom();
+  }
+});
+</script>
+</body>
+</html>
